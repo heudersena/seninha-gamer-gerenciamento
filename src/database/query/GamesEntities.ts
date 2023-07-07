@@ -22,7 +22,7 @@ class GamesEntities {
     static async gameGenerator(establishmentId: number, code: string) {
 
         try {
-            const [rows] = await poll.query("CALL PROCEDURE_REGISTRAR_JOGOS(?,?,?)", [establishmentId, 25, code])
+            const [rows] = await poll.query("CALL PROCEDURE_REGISTRAR_JOGOS(?,?,?)", [establishmentId, 51, code])
             const aposta = rows[0]
             return CUSTOM_MESSAGE({
                 path: "GAMESENTITIES:gameGenerator",
