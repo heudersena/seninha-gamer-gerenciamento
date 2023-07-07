@@ -1,0 +1,31 @@
+DROP PROCEDURE IF EXISTS PROCIDURE_GERAR_NUMEROS_ALEATORIOS;
+
+DELIMITER //
+CREATE PROCEDURE PROCIDURE_GERAR_NUMEROS_ALEATORIOS(OUT INPUT_QUANTIDADE VARCHAR(191), IN INPUT_QUANTIDADE_NUMERO INT)
+
+BEGIN 
+    DECLARE i INT DEFAULT 0;
+    DECLARE num INT;
+    DECLARE result VARCHAR(255) DEFAULT '';
+
+    WHILE i < INPUT_QUANTIDADE_NUMERO DO
+        SET num = FLOOR(RAND() * 60) + 1;
+        
+        IF result NOT LIKE CONCAT('%', num, '%') THEN
+            IF result <> '' THEN
+                SET result = CONCAT(result, ',');
+            END IF;
+            
+            SET result = CONCAT(result, num);
+            SET i = i + 1;
+        END IF;
+    END WHILE;
+  
+  SET INPUT_QUANTIDADE = result; 
+  
+END //
+
+DELIMITER ;
+
+-- CALL PROCIDURE_GERAR_NUMEROS_ALEATORIOS();
+

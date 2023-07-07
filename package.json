@@ -1,0 +1,44 @@
+{
+  "name": "seninha-gamer-gerenciamento",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "email": "cross-env NODE_ENV=development  tsx src/services/SendMail.ts",
+    "build": "tsup",
+    "start": "node dist/server.js",
+    "knex:migrate:make": "./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:make",
+    "knex:migrate:latest": "./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:latest",
+    "knex:migrate:rollback": "./node_modules/.bin/knex --knexfile src/database/knexfile.ts migrate:rollback",
+    "knex": "cross-env NODE_ENV=development  knex --knexfile src/database/knexfile.ts migrate:make "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/express-validator": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "^20.3.3",
+    "@types/uuid": "^9.0.2",
+    "cross-env": "^7.0.3",
+    "ts-node": "^10.9.1",
+    "tsup": "^7.1.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "knex": "^2.4.2",
+    "mysql2": "^3.4.4",
+    "socket.io": "^4.7.1",
+    "uuid": "^9.0.0"
+  }
+}
