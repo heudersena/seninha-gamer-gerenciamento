@@ -3,6 +3,8 @@ import { UsersController } from "../controllers/UsersController"
 import { GamersController } from "../controllers/GamersController"
 import { ensureAuthenticated } from "../middleware/ensureAuthenticated"
 import { BetsController } from "../controllers/BetsController"
+import { AwarsController } from "../controllers/AwarsController"
+import { PaymentsController } from "../controllers/PaymentsController"
 
 const router = Router()
 
@@ -17,5 +19,10 @@ router.post("/v1/games/create", ensureAuthenticated, GamersController.create)
 
 router.post("/v1/bets", ensureAuthenticated, BetsController.search_concurso)
 
+
+router.post("/v1/awards/add-money", AwarsController.add)
+
+
+router.post("/v1/verify-payment",ensureAuthenticated, PaymentsController.checkPayment)
 
 export { router }

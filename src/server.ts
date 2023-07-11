@@ -16,7 +16,7 @@ app.use((request: Request, response: Response, next: NextFunction) => {
     request.io = io
     response.header("Access-Control-Allow-Origin", "*")
     response.header("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE, HEAD, PATH")
-    response.header("Access-Control-Allow-Headers", "*")
+    response.header("Access-Control-Allow-Headers", "*") 
     next()
 })
 const serverHttp = http.createServer(app);
@@ -29,6 +29,12 @@ const io = new Server(serverHttp, {
         methods: ["GET", "POST", "PUT", "DELETE", "PATH"]
     }
 });
+
+io.on('connection', (socket: any) => {
+    socket.on("{USUSERLOGGEDIN}", (email: string) => {
+        socket.join(email)
+    })
+})
 
 app.use(router)
 
