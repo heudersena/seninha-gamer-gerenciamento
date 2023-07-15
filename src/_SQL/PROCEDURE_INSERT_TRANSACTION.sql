@@ -1,0 +1,75 @@
+DROP PROCEDURE IF EXISTS PROCEDURE_INSERT_TRANSACTION;
+DELIMITER $$
+CREATE PROCEDURE PROCEDURE_INSERT_TRANSACTION(
+	IN INPUT_AMOUNT DECIMAL(10,2),
+	IN INPUT_TYPE_TRANSACTION VARCHAR(50),
+	IN INPUT_MERCADO_ID INT(11),
+	IN INPUT_MERCADO_STATUS VARCHAR(50),
+	IN INPUT_MERCADO_STATUS_DETAIL VARCHAR(50),
+	IN INPUT_MERCADO_EMAIL VARCHAR(100),
+	IN INPUT_MERCADO_QR_CODE VARCHAR(191),
+	IN INPUT_MERCADO_TICKET_URL VARCHAR(191),
+	IN INPUT_MERCADO_TRANSACTION_ID VARCHAR(191),
+	IN INPUT_MERCADO_QR_CODE_BASE64  TEXT	
+)
+
+BEGIN
+	IF INPUT_TYPE_TRANSACTION = 'pix' THEN
+	  INSERT INTO transactions (
+	  					amount,
+						`type`,
+						m_id,
+						m_status,
+						m_status_detail,
+						m_email,
+						m_qr_code,
+						m_ticket_url,
+						m_transaction_id,
+						m_qr_code_base64
+					) 
+	  			VALUES(
+				  		INPUT_AMOUNT,
+						INPUT_TYPE_TRANSACTION,
+						INPUT_MERCADO_ID,
+						INPUT_MERCADO_STATUS,
+						INPUT_MERCADO_STATUS_DETAIL,
+						INPUT_MERCADO_EMAIL,
+						INPUT_MERCADO_QR_CODE,
+						INPUT_MERCADO_TICKET_URL,
+						INPUT_MERCADO_TRANSACTION_ID,
+						INPUT_MERCADO_QR_CODE_BASE64
+				);
+				SELECT * FROM transactions WHERE transactions.id = LAST_INSERT_ID();
+	ELSEIF INPUT_TYPE_TRANSACTION = 'dinheiro' THEN
+		 INSERT INTO transactions (
+	  					amount,
+						`type`,
+						m_id,
+						m_status,
+						m_status_detail,
+						m_email,
+						m_qr_code,
+						m_ticket_url,
+						m_transaction_id,
+						m_qr_code_base64
+					) 
+	  			VALUES(
+				  		INPUT_AMOUNT,
+						INPUT_TYPE_TRANSACTION,
+						INPUT_MERCADO_ID,
+						INPUT_MERCADO_STATUS,
+						INPUT_MERCADO_STATUS_DETAIL,
+						INPUT_MERCADO_EMAIL,
+						INPUT_MERCADO_QR_CODE,
+						INPUT_MERCADO_TICKET_URL,
+						INPUT_MERCADO_TRANSACTION_ID,
+						INPUT_MERCADO_QR_CODE_BASE64
+				);
+				SELECT * FROM transactions WHERE transactions.id = LAST_INSERT_ID();
+	END IF;
+
+END $$
+DELIMITER ;
+
+
+CALL PROCEDURE_INSERT_TRANSACTION('55.00','pix',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)
