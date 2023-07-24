@@ -5,6 +5,8 @@ import { UsersEntities } from "../database/query/UsersEntities"
 class UsersController {
     static async signIn(request: Request, response: Response) {
         const { email, password } = request.body;
+        console.log("SESSION:");
+
         const returns = await UsersEntities.signIn(email, password);
         return response.status(returns.code).json(returns)
 
