@@ -24,10 +24,11 @@ class GamesEntities {
         try {
             const [rows] = await poll.query("CALL PROCEDURE_REGISTRAR_JOGOS(?,?,?)", [establishmentId, 25, code])
             const aposta = rows[0]
-            return CUSTOM_MESSAGE({
-                path: "GAMESENTITIES:gameGenerator",
-                data: { aposta }
-            })
+            return aposta
+            // return CUSTOM_MESSAGE({
+            //     path: "GAMESENTITIES:gameGenerator",
+            //     data: { aposta }
+            // })
         } catch (error) {
             return CUSTOM_MESSAGE({
                 error: true,

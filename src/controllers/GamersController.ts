@@ -5,6 +5,7 @@ import { CUSTOM_MESSAGE } from "../configs/message";
 import { v4 } from "uuid";
 import { IMP, MercadoPago } from "../utils/MercadoPago";
 import { poll } from "../database/mysql";
+import { buscar_jogos_ultimo_insert } from "../database/query/FunctionsUtils";
 
 class GamersController {
     static async index(request: Request, response: Response) {
@@ -31,17 +32,16 @@ class GamersController {
 
             const establishmentId = Number(request.user.establishmentId);
 
-            const arr: any = [];
-
             for (let i = 0; i < quantities; i++) {
-                const content = await GamesEntities.gameGenerator(establishmentId, code);
-                arr.push(content)
+                await GamesEntities.gameGenerator(establishmentId, code);
             }
+
+            const aposta_bd = await buscar_jogos_ultimo_insert(code)
 
             const amount = quantities * 2
 
-            const MP = await MercadoPago.createPayment({ transaction_amount: amount, payment_method_id: "debit_card", payer: { email: request.user.email }, installments: 1 }) as IMP
             if (type_pagamento == "pix") {
+                const MP = await MercadoPago.createPayment({ transaction_amount: amount, payment_method_id: "debit_card", payer: { email: request.user.email }, installments: 1 }) as IMP
                 const id = MP.response.id
                 const status = MP.response.status
                 const status_detail = MP.response.status_detail
@@ -64,11 +64,11 @@ class GamersController {
                         transaction_id,
                         qr_code_base64
                     ])
-                return response.json({ mercadopago: { id, status_detail, transaction_id, qr_code_base64, email }, code, apostas: arr, transaction })
+                return response.json({ mercadopago: { id, status_detail, transaction_id, qr_code_base64, email }, code, apostas: aposta_bd, transaction: transaction[0][0] })
 
             } else {
                 const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [amount, type_pagamento])
-                return response.json({ mercadopago: {}, data: arr, transaction: transaction[0][0] })
+                return response.json({ mercadopago: {}, apostas: aposta_bd, transaction: transaction[0][0] })
             }
         } catch (error) {
             return response.json({ mercadopago: {}, apostas: {}, transaction: {}, error })
