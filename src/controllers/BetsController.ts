@@ -14,7 +14,7 @@ class BetsController {
                 data: { _pagamento, _concursos },
                 path: "BetsController:search_concurso"
             })
-            request.io.emit("ATUALIZAR::VALORES::MOEDA", {});
+            
             
             return response.json(returns)
         } catch (error) {

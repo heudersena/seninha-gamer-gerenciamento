@@ -14,7 +14,7 @@ class GamersController {
     }
 
     static async create(request: Request, response: Response) {
-
+        
         try {
             const code = v4()
             const quantities = request.body.quantities ? request.body.quantities <= 10 ? request.body.quantities : 12 : 1;
@@ -37,8 +37,11 @@ class GamersController {
             }
 
             const aposta_bd = await buscar_jogos_ultimo_insert(code)
-
+            
             const amount = quantities * 2
+            const amount30 = (amount * 30) / 100;
+            const amount70 = (amount * 70) / 100;
+            
 
             if (type_pagamento == "pix") {
                 const MP = await MercadoPago.createPayment({ transaction_amount: amount, payment_method_id: "debit_card", payer: { email: request.user.email }, installments: 1 }) as IMP
@@ -64,12 +67,15 @@ class GamersController {
                         transaction_id,
                         qr_code_base64
                     ])
+                request.io.emit("ATUALIZAR::VALORES::MOEDA", {}); // ATUALIZAR OS VALORES DOS PREMIOS EM TEMPO REAL
                 return response.json({ mercadopago: { id, status_detail, transaction_id, qr_code_base64, email }, code, apostas: aposta_bd, transaction: transaction[0][0] })
 
             } else {
-                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [amount, type_pagamento])
+                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [amount70, type_pagamento])
+                request.io.emit("ATUALIZAR::VALORES::MOEDA", {});
                 return response.json({ mercadopago: {}, apostas: aposta_bd, transaction: transaction[0][0] })
             }
+
         } catch (error) {
             return response.json({ mercadopago: {}, apostas: {}, transaction: {}, error })
         }
