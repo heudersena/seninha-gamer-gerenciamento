@@ -19,6 +19,7 @@ class GamersController {
             const code = v4()
             const quantities = request.body.quantities ? request.body.quantities <= 10 ? request.body.quantities : 12 : 1;
             const type_pagamento = request.body.type_pagamento // PIX ou DINHEIRO
+            console.log(type_pagamento);
 
             if (request.user.establishmentId == undefined) {
                 return response.status(401).json(CUSTOM_MESSAGE({
@@ -31,6 +32,7 @@ class GamersController {
             }
 
             const establishmentId = Number(request.user.establishmentId);
+            
 
             for (let i = 0; i < quantities; i++) {
                 await GamesEntities.gameGenerator(establishmentId, code);
@@ -54,7 +56,7 @@ class GamersController {
                 const transaction_id = MP.response.transaction_details.transaction_id
                 const qr_code_base64 = MP.response.point_of_interaction.transaction_data.qr_code_base64
 
-                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,?,?,?,?,?,?,?,?)",
+                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,?,?,?,?,?,?,?,?,?)",
                     [
                         amount,
                         type_pagamento,
@@ -65,13 +67,14 @@ class GamersController {
                         qr_code,
                         ticket_url,
                         transaction_id,
-                        qr_code_base64
+                        qr_code_base64,
+                        establishmentId
                     ])
                 request.io.emit("ATUALIZAR::VALORES::MOEDA", {}); // ATUALIZAR OS VALORES DOS PREMIOS EM TEMPO REAL
                 return response.json({ mercadopago: { id, status_detail, transaction_id, qr_code_base64, email }, code, apostas: aposta_bd, transaction: transaction[0][0] })
 
             } else {
-                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", [amount70, type_pagamento])
+                const [transaction] = await poll.query("CALL PROCEDURE_INSERT_TRANSACTION(?,?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,?)", [amount70, type_pagamento,establishmentId])
                 request.io.emit("ATUALIZAR::VALORES::MOEDA", {});
                 return response.json({ mercadopago: {}, apostas: aposta_bd, transaction: transaction[0][0] })
             }

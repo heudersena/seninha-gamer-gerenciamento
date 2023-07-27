@@ -56,7 +56,7 @@ class MercadoPago {
                 email: data.payer.email
             },
             installments: 1,
-            date_of_expiration: String(dayjs(new Date()).add(6, 'minutes').format('YYYY-MM-DDTHH:mm:ss.000ZZ'))
+            date_of_expiration: String(dayjs(new Date()).add(10, 'minutes').format('YYYY-MM-DDTHH:mm:ss.000ZZ'))
         };
         const content = await mercadopago.payment?.save(MercadoPago)
         return content;
