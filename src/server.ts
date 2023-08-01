@@ -21,14 +21,7 @@ app.use((request: Request, response: Response, next: NextFunction) => {
 })
 const serverHttp = http.createServer(app);
 
-
-
-const io = new Server(serverHttp, {
-    cors: {
-        origin: ["http://192.168.0.111:4007", "http://192.168.0.111"],
-        methods: ["GET", "POST", "PUT", "DELETE", "PATH"]
-    }
-});
+const io = new Server(serverHttp, { cors: { origin: '*' } });
 
 io.on('connection', (socket: any) => {
     console.log("connection: ", socket?.id);
