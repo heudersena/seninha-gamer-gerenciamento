@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { Request, Response, Router } from "express"
 import { UsersController } from "../controllers/UsersController"
 import { GamersController } from "../controllers/GamersController"
 import { ensureAuthenticated } from "../middleware/ensureAuthenticated"
@@ -9,6 +9,8 @@ import { AdressesController } from "../controllers/AdressesController"
 import { EstablishmentsController } from "../controllers/EstablishmentsController"
 
 const router = Router()
+
+router.get("/", (request: Request, response: Response) => { response.json({ message: 'ok' }) })
 
 router.post("/v1/users/signin", UsersController.signIn) // SESSION
 router.post("/v1/users/signup", UsersController.signUp) // REGISTER

@@ -4,13 +4,15 @@ import express, { Request, Response, NextFunction } from "express"
 import http from "http"
 import cors from "cors"
 import { Server } from 'socket.io';
-
+import path from 'path'
 import { router } from "./routers"
 import { AppError } from "./utils/AppError"
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+
+app.use("/public", express.static(path.join(__dirname, 'public')))
 
 app.use((request: Request, response: Response, next: NextFunction) => {
     request.io = io

@@ -49,6 +49,8 @@ export interface IMP {
 
 class MercadoPago {
     static async createPayment(data: IMercadoPagoCreate): Promise<IMP | unknown> {
+        console.log(data.transaction_amount);
+        
         const MercadoPago: IMercadoPagoCreate = {
             transaction_amount: data.transaction_amount,
             payment_method_id: "pix",
