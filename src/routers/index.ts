@@ -21,7 +21,8 @@ router.get("/v1/games", GamersController.index)
 router.post("/v1/games/create", ensureAuthenticated, GamersController.create)
 
 
-router.post("/v1/bets", ensureAuthenticated, BetsController.search_concurso)
+router.post("/v1/bets/search_concurso", ensureAuthenticated, BetsController.search_concurso)
+router.post("/v1/bets/awarded", BetsController.getOneConcurso)
 
 
 router.post("/v1/awards/add-money", AwarsController.add)

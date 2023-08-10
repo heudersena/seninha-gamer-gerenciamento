@@ -17,7 +17,6 @@ class AdressesController {
             } = request.body
 
             const establishmentId = request.user?.establishmentId;
-            console.log(request.body,establishmentId);
             
             const content = await AdressesEntities.create(
                 cep,

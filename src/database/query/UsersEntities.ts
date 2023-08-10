@@ -20,9 +20,10 @@ class UsersEntities {
             })
         }
         else {
-            const [rows] = await poll.query("SELECT * FROM establishments AS e WHERE e.id = ?", [user?.id]);
+            const [rows] = await poll.query("SELECT * FROM establishments AS e WHERE e.userId = ?", [user?.id]);
             const estabelecimento = rows[0];
-
+            console.log(estabelecimento);
+            
             const passwordMatched = compareSync(password, user?.password);
 
             if (!passwordMatched) {

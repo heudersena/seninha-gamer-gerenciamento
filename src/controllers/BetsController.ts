@@ -10,13 +10,13 @@ class BetsController {
             const content = await BetsEntities.seekContestWinners(Number(establishmentId), Number(concurso));
             const _concursos = content[0][0][0]
             const _pagamento = content[1][0][0]
+            
             const returns = CUSTOM_MESSAGE({
                 data: { _pagamento, _concursos },
                 path: "BetsController:search_concurso"
             })
-            
-            
             return response.json(returns)
+
         } catch (error) {
             const returns = CUSTOM_MESSAGE({
                 error: true,
@@ -27,6 +27,17 @@ class BetsController {
             })
             return response.json(returns)
         }
+    }
+
+    static async getOneConcurso(request: Request, response: Response): Promise<any> {
+        const concurso = Number(request.body.concurso);
+        try {
+            const contents = await BetsEntities.getOneConcurso(concurso);
+            return response.status(200).json(contents)
+        } catch (error) {
+            return response.status(401).json(JSON.stringify(error))
+        }
+
     }
 }
 
